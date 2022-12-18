@@ -1,0 +1,34 @@
+from bs4 import BeautifulSoup as bs
+
+BASE_URL = "https://simpsons.fandom.com"
+
+def isCharactersPage(page:bs):
+    """True if the BeautifulSoup object represents a characters page"""
+    return page.find(id="firstHeading").string.strip() == "Characters"
+
+def charactersURLs(charactersPage:bs):
+    """Return a list of all links of possible characters pages"""
+    if not isCharactersPage(charactersPage):
+        raise ValueError("Soup received is not a characters page")
+    
+    # reduce search space considering only the right section of the page
+    charactersSection = charactersPage.find_all(class_="category-page__members")[0]
+    characters = charactersSection.find_all(class_="category-page__member")
+    # iterate character elements to find all links
+    links = []
+    for character in characters:
+        # this are relative links
+        links.append(BASE_URL + character.a["href"])
+    return links
+
+def charactersNextURL(charactersPage:bs):
+    """Return the url for the next characters page, None if this is the last page"""
+    if not isCharactersPage(charactersPage):
+        raise ValueError("Soup received is not a characters page")
+    
+    # .find() returns None if can't find anything
+    nextButton = charactersPage.find(class_="category-page__pagination-next")
+    if nextButton:
+        return nextButton["href"]
+    else:
+        return None
