@@ -82,21 +82,36 @@ statusImgNames = {
     "Fictional.jpg": "fictional" # TODO separate fictional (yes or no) from status
 }
 def status(characterInfobox:bs):
-    """Get character status from infobox"""
-    # some characters have 2 statuses! but it seems that the one of the two is always fictional
-    # TODO parse status considering multiple statuses, use another variable (boolean) for fictional if fictional is the only problem (https://simpsons.fandom.com/wiki/Qui-Gon_Jinn)
+    """Get character status from infobox, the second returned value represents if the character is fictional"""
     if characterInfobox:
         statusTag = characterInfobox.find(attrs={"data-source": "status"})
         if statusTag:
+            statusContent = statusTag.div
             # status is displayed through an image with alt attribute same as image name
-            # possibilities in statusImgNames
             # but in rare cases, there is no image (https://simpsons.fandom.com/wiki/Charlene_Bouvier)
-            if statusTag.div.string:
+            if statusContent.string:
                 # lower because statusImgNames values are all lower
-                return str(statusTag.div.string).strip().lower()
-            else:
-                return statusImgNames[statusTag.div.a.img["alt"]]
-    return None
+                return str(statusTag.div.string).strip().lower(), False
+            # possibilities in statusImgNames
+            status = statusImgNames[statusContent.a.img["alt"]]
+            fictional = False
+            # some characters have 2 statuses, but it seems that the one of the two is always fictional (https://simpsons.fandom.com/wiki/Amy_Wong) (https://simpsons.fandom.com/wiki/Mao (only Fictional))
+            # so this function will return the real status, and a boolean indicating if this character is fictional
+            if status == "fictional":
+                status = None
+                fictional = True
+            # handle two statuses
+            statusContent.a.decompose()
+            handleP(statusContent)
+            if statusContent.a:
+                if fictional:
+                    status = statusImgNames[statusContent.a.img["alt"]]
+                else:
+                    fictional = statusImgNames[statusContent.a.img["alt"]] == "fictional"
+                    if not fictional:
+                        warn("two statuses not fictional found")
+            return status, fictional
+    return None, False
 
 def alias(characterInfobox:bs):
     """Get character aliases from infobox"""
@@ -195,6 +210,7 @@ def voice(characterInfobox:bs):
 def characterAttrs(characterPage:bs, **moreAttributes):
     """Get all character attributes"""
     infobox = characterPage.find(class_="portable-infobox")
+    state, fictional = status(infobox)
     return {
         **moreAttributes,
         "title": characterPage.find(id="firstHeading").string.strip(),
@@ -203,7 +219,8 @@ def characterAttrs(characterPage:bs, **moreAttributes):
         "age": age(infobox),
         "species": species(infobox),
         "sex": sex(infobox),
-        "status": status(infobox),
+        "status": state,
+        "fictional": fictional,
         "alias": alias(infobox),
         "hair color": hairColor(infobox),
         "color": color(infobox),
