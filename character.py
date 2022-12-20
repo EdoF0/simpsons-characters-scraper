@@ -178,7 +178,11 @@ def firstAppearance(characterInfobox:bs):
         firstAppearanceTag = characterInfobox.find(attrs={"data-source": "appearance"})
         if firstAppearanceTag:
             # firstAppearanceTag contains a link to an episode
-            return firstAppearanceTag.div.a["title"].strip()
+            # or, in rare cases, the title only (https://simpsons.fandom.com/wiki/Amy_Wong)
+            if firstAppearanceTag.div.a:
+                return firstAppearanceTag.div.a["title"].strip()
+            else:
+                return firstAppearanceTag.div.string
     return None
 
 def firstMentioned(characterInfobox:bs):
