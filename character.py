@@ -79,7 +79,7 @@ statusImgNames = {
     "Alive.png": "alive",
     "Deceased.png": "deceased",
     "Unknown.png": "unknown",
-    "Fictional.jpg": "fictional" # TODO separate fictional (yes or no) from status
+    "Fictional.jpg": "fictional"
 }
 def status(characterInfobox:bs):
     """Get character status from infobox, the second returned value represents if the character is fictional"""
