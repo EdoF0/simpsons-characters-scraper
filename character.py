@@ -81,36 +81,56 @@ statusImgNames = {
     "Unknown.png": "unknown",
     "Fictional.jpg": "fictional"
 }
+def _handleStatusTag(statusTag:bs):
+    status = None
+    fictional = False
+    if statusTag:
+        statusContent = statusTag.div
+        # status is displayed through an image with alt attribute same as image name
+        # but in rare cases, there is no image (https://simpsons.fandom.com/wiki/Charlene_Bouvier)
+        if statusContent.string:
+            # if the string property exists, there is no other status
+            # lower because statusImgNames values are all lower
+            return str(statusTag.div.string).strip().lower(), fictional
+        # possibilities in statusImgNames
+        status = statusImgNames[statusContent.a.img["alt"]]
+        # some characters have 2 statuses, but it seems that the one of the two is always fictional (https://simpsons.fandom.com/wiki/Burns%27_Alien (fictional second)) (https://simpsons.fandom.com/wiki/Amy_Wong (fictional first)) (https://simpsons.fandom.com/wiki/Mao (only Fictional))
+        # so this function will return the real status, and a boolean indicating if this character is fictional
+        if status == "fictional":
+            status = None
+            fictional = True
+        # handle two statuses
+        statusContent.a.decompose()
+        handleP(statusContent)
+        if statusContent.a:
+            # if there is another status
+            status2 = statusImgNames[statusContent.a.img["alt"]]
+            if status2 == "fictional":
+                fictional = True
+            else:
+                if status:
+                    # for rare cases (https://simpsons.fandom.com/wiki/Mario) (https://simpsons.fandom.com/wiki/Mickey_Mouse_(Character))
+                    status = status + STR_SEPARATOR + status2
+                else:
+                    status = status2
+    return status, fictional
 def status(characterInfobox:bs):
     """Get character status from infobox, the second returned value represents if the character is fictional"""
     if characterInfobox:
-        statusTag = characterInfobox.find(attrs={"data-source": "status"})
-        if statusTag:
-            statusContent = statusTag.div
-            # status is displayed through an image with alt attribute same as image name
-            # but in rare cases, there is no image (https://simpsons.fandom.com/wiki/Charlene_Bouvier)
-            if statusContent.string:
-                # lower because statusImgNames values are all lower
-                return str(statusTag.div.string).strip().lower(), False
-            # possibilities in statusImgNames
-            status = statusImgNames[statusContent.a.img["alt"]]
-            fictional = False
-            # some characters have 2 statuses, but it seems that the one of the two is always fictional (https://simpsons.fandom.com/wiki/Amy_Wong) (https://simpsons.fandom.com/wiki/Mao (only Fictional))
-            # so this function will return the real status, and a boolean indicating if this character is fictional
-            if status == "fictional":
-                status = None
-                fictional = True
-            # handle two statuses
-            statusContent.a.decompose()
-            handleP(statusContent)
-            if statusContent.a:
-                if fictional:
-                    status = statusImgNames[statusContent.a.img["alt"]]
-                else:
-                    fictional = statusImgNames[statusContent.a.img["alt"]] == "fictional"
-                    if not fictional:
-                        warn("two statuses not fictional found")
-            return status, fictional
+        statusTag1 = characterInfobox.find(attrs={"data-source": "status"})
+        # some rare characters have also "other statuses" (https://simpsons.fandom.com/wiki/Myrna_Bellamy)
+        statusTag2 = characterInfobox.find(attrs={"data-source": "other statuses"})
+        status1, fictional1 = _handleStatusTag(statusTag1)
+        status2, fictional2 = _handleStatusTag(statusTag2)
+        status = None
+        fictional = fictional1 or fictional2
+        if status1 and status2:
+            status = status1 + STR_SEPARATOR + status2
+        elif status1:
+            status = status1
+        elif status2:
+            status = status2
+        return status, fictional
     return None, False
 
 def alias(characterInfobox:bs):
