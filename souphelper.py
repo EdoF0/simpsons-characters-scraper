@@ -120,6 +120,19 @@ def handleSmall(soup:bs, extract = True):
             small.replace_with(SoupStr(""))
         mergeStringElement(soup, i)
 
+def handleItalic(soup:bs, extract = True):
+    """Extract contents of <i> tags from the first depth level children"""
+    for italic in soup.find_all("i", recursive=False):
+        i = soup.index(italic)
+        if extract:
+            if italic.string and italic.string.strip() != "":
+                italic.replace_with(SoupStr(italic.string))
+            else:
+                italic.replace_with(SoupStr(""))
+        else:
+            italic.replace_with(SoupStr(""))
+        mergeStringElement(soup, i)
+
 def handleLinks(soup:bs, replaceWithText=True):
     """Remove <a> tags from the first depth level children"""
     for a in soup.find_all("a", recursive=False):

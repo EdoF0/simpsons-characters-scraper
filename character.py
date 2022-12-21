@@ -248,6 +248,8 @@ def voice(characterInfobox:bs):
             # some rare characters have context descriptions for the voice actor in small tags (https://simpsons.fandom.com/wiki/Carol_Berrera)
             # remove the context, keep voice actors only
             handleSmall(voiceContent, extract=False)
+            # a character with italic tags was found (https://simpsons.fandom.com/wiki/Charles_Montgomery_Burns)
+            handleItalic(voiceContent)
             # remove also cite notes (https://simpsons.fandom.com/wiki/Blake_(Dad_Behavior))
             handleSups(voiceContent)
             # some rare characters are voiced by multiple voice actors separated by line breaks (https://simpsons.fandom.com/wiki/Kumiko_Albertson)
