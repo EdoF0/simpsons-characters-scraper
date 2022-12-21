@@ -98,7 +98,6 @@ def handleSpan(soup:bs, extract = True):
         i = soup.index(span)
         if extract:
             if span.string and span.string.strip() != "":
-                # for unknown reason, replace_with has no effect
                 span.replace_with(SoupStr(span.string))
             elif span.has_attr("title"):
                 span.replace_with(SoupStr(span["title"]))
@@ -106,6 +105,19 @@ def handleSpan(soup:bs, extract = True):
                 span.replace_with(SoupStr(""))
         else:
             span.replace_with(SoupStr(""))
+        mergeStringElement(soup, i)
+
+def handleSmall(soup:bs, extract = True):
+    """Extract contents of <small> tags from the first depth level children"""
+    for small in soup.find_all("small", recursive=False):
+        i = soup.index(small)
+        if extract:
+            if small.string and small.string.strip() != "":
+                small.replace_with(SoupStr(small.string))
+            else:
+                small.replace_with(SoupStr(""))
+        else:
+            small.replace_with(SoupStr(""))
         mergeStringElement(soup, i)
 
 def handleLinks(soup:bs, replaceWithText=True):
@@ -129,10 +141,8 @@ def handleSups(soup:bs):
     """Remove <sup> tags from the first depth level children"""
     for sup in soup.find_all("sup", recursive=False):
         i = soup.index(sup)
-        sup.decompose()
-        # elements will shift one to left from position i
-        # do not merge right because it's not an element adjacent to the sup element
-        mergeStringElement(soup, i, right=False)
+        sup.replace_with(SoupStr(""))
+        mergeStringElement(soup, i)
 
 def handleP(soup:bs):
     """Extract contents of <p> tags from the first depth level children"""
