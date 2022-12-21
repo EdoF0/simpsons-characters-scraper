@@ -133,7 +133,11 @@ def handleLinks(soup:bs, replaceWithText=True):
 def handleSups(soup:bs):
     """Remove <sup> tags from the first depth level children"""
     for sup in soup.find_all("sup", recursive=False):
+        i = soup.index(sup)
         sup.decompose()
+        # elements will shift one to left from position i
+        # do not merge right because it's not an element adjacent to the sup element
+        mergeStringElement(soup, i, right=False)
 
 def handleP(soup:bs):
     """Extract contents of <p> tags from the first depth level children"""
