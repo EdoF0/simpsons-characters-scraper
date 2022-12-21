@@ -202,7 +202,10 @@ def job(characterInfobox:bs):
             handleSmall(jobContent, extract=False)
             # different jobs are separated by line breaks (https://simpsons.fandom.com/wiki/Elvis_Presley) (https://simpsons.fandom.com/wiki/Chief_Inspector)
             handleLinebreaks(jobContent, STR_SEPARATOR)
-            return str(jobContent.string).strip()
+            if jobContent.string:
+                return str(jobContent.string).strip()
+            else:
+                warn('job parsing failed for ' + str(jobContent) + '"')
     return None
 
 def firstAppearance(characterInfobox:bs):
