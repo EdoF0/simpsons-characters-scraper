@@ -153,7 +153,10 @@ def alias(characterInfobox:bs):
             # there are also cite notes (https://simpsons.fandom.com/wiki/Demogorgon)
             handleSups(aliasContent)
             handleLinebreaks(aliasContent, STR_SEPARATOR)
-            return str(aliasContent.string).strip()
+            if aliasContent.string:
+                return str(aliasContent.string).strip()
+            else:
+                warn('alias parsing failed for ' + str(aliasContent) + '"')
     return None
 
 def hairColor(characterInfobox:bs):
