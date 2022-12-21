@@ -197,6 +197,9 @@ def job(characterInfobox:bs):
             handleP(jobContent)
             # and sometimes jobs contain some links to the job place (https://simpsons.fandom.com/wiki/Chief_Inspector)
             handleLinks(jobContent)
+            # some rare characters have context descriptions for the job in small tags (https://simpsons.fandom.com/wiki/Carol_Berrera)
+            # remove the context, keep job only
+            handleSmall(jobContent, extract=False)
             # different jobs are separated by line breaks (https://simpsons.fandom.com/wiki/Elvis_Presley) (https://simpsons.fandom.com/wiki/Chief_Inspector)
             handleLinebreaks(jobContent, STR_SEPARATOR)
             return str(jobContent.string).strip()
@@ -240,6 +243,9 @@ def voice(characterInfobox:bs):
             handleSpan(voiceContent)
             # some characters have a voice actor with a dedicated page, meaning wrapped by an <a> tag
             handleLinks(voiceContent)
+            # some rare characters have context descriptions for the voice actor in small tags (https://simpsons.fandom.com/wiki/Carol_Berrera)
+            # remove the context, keep voice actors only
+            handleSmall(voiceContent, extract=False)
             # some rare characters are voiced by multiple voice actors separated by line breaks (https://simpsons.fandom.com/wiki/Kumiko_Albertson)
             handleLinebreaks(voiceContent, STR_SEPARATOR)
             return voiceContent.string.strip()
