@@ -115,19 +115,14 @@ def handleLinks(soup:bs, replaceWithText=True):
         if replaceWithText:
             if a.string and a.string.strip() != "":
                 a.replace_with(SoupStr(a.string))
-                #replace(soup, i, SoupStr(a.string))
             elif a.has_attr("title"):
                 a.replace_with(SoupStr())
-                #replace(soup, i, SoupStr(a["title"]))
             elif a.has_attr("href"):
                 a.replace_with(SoupStr(a["href"]))
-                #replace(soup, i, SoupStr(a["href"]))
             else:
                 a.replace_with(SoupStr(""))
-                #replace(soup, i, SoupStr(""))
         else:
             a.replace_with(SoupStr(""))
-            #replace(soup, i, SoupStr(""))
         mergeStringElement(soup, i)
 
 def handleSups(soup:bs):
