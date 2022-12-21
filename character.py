@@ -50,29 +50,29 @@ def species(characterInfobox:bs):
             return str(speciesTag.div.string).strip().lower()
     return None
 
-sexImgNames = {
+genderImgNames = {
     "Male.png": "male",
     "Female.png": "female",
     "Unknown.png": "unknown"
 }
-def sex(characterInfobox:bs):
-    """Get character sex from infobox"""
+def gender(characterInfobox:bs):
+    """Get character gender from infobox"""
     if characterInfobox:
-        sexTag = characterInfobox.find(attrs={"data-source": "sex"})
-        if not sexTag:
+        genderTag = characterInfobox.find(attrs={"data-source": "sex"})
+        if not genderTag:
             # if sex is not found, try with gender (for rare pages like https://simpsons.fandom.com/wiki/Always_Comes_in_Second)
-            sexTag = characterInfobox.find(attrs={"data-source": "gender"})
-        if sexTag:
-            sexContent = sexTag.div
-            # sex is displayed through an image with alt attribute same as image name
-            # possibilities in sexImgNames
-            sex = sexImgNames[sexContent.a.img["alt"]]
+            genderTag = characterInfobox.find(attrs={"data-source": "gender"})
+        if genderTag:
+            genderContent = genderTag.div
+            # gender is displayed through an image with alt attribute same as image name
+            # possibilities in genderImgNames
+            gender = genderImgNames[genderContent.a.img["alt"]]
             # in rare cases, some characters have multiple genders (https://simpsons.fandom.com/wiki/3_Little_Pigs) (https://simpsons.fandom.com/wiki/Lady_Duff)
-            sexContent.a.decompose()
-            handleP(sexContent)
-            if sexContent.a:
-                sex = sex + "," + sexImgNames[sexContent.a.img["alt"]]
-            return sex
+            genderContent.a.decompose()
+            handleP(genderContent)
+            if genderContent.a:
+                gender = gender + "," + genderImgNames[genderContent.a.img["alt"]]
+            return gender
     return None
 
 statusImgNames = {
@@ -244,7 +244,7 @@ def characterAttrs(characterPage:bs, **moreAttributes):
         "image": image(infobox),
         "age": age(infobox),
         "species": species(infobox),
-        "sex": sex(infobox),
+        "gender": gender(infobox),
         "status": state,
         "fictional": fictional,
         "alias": alias(infobox),
