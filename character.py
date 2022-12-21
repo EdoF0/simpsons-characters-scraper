@@ -142,7 +142,10 @@ def alias(characterInfobox:bs):
             # aliasContent has directly a name inside (https://simpsons.fandom.com/wiki/Adam_Simpson)
             # but sometimes it has paragraphs containing other aliases (https://simpsons.fandom.com/wiki/Elvis_Presley)
             handleP(aliasContent)
-            # and also cite notes (https://simpsons.fandom.com/wiki/Demogorgon)
+            # sometimes there are small tags explaining the alias context (https://simpsons.fandom.com/wiki/Abraham_Lincoln)
+            # remove the context, keep aliases only
+            handleSmall(aliasContent, extract=False)
+            # there are also cite notes (https://simpsons.fandom.com/wiki/Demogorgon)
             handleSups(aliasContent)
             handleLinebreaks(aliasContent, STR_SEPARATOR)
             return str(aliasContent.string).strip()
