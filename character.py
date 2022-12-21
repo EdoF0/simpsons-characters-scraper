@@ -65,6 +65,11 @@ def gender(characterInfobox:bs):
         if genderTag:
             genderContent = genderTag.div
             # gender is displayed through an image with alt attribute same as image name
+            # but in rare cases, there is no image (https://simpsons.fandom.com/wiki/Al_Sneed)
+            if genderContent.string:
+                # if the string property exists, there is no other status
+                # lower because genderImgNames values are all lower
+                return str(genderContent.string).strip().lower()
             # possibilities in genderImgNames
             gender = genderImgNames[genderContent.a.img["alt"]]
             # in rare cases, some characters have multiple genders (https://simpsons.fandom.com/wiki/3_Little_Pigs) (https://simpsons.fandom.com/wiki/Lady_Duff)
@@ -91,7 +96,7 @@ def _handleStatusTag(statusTag:bs):
         if statusContent.string:
             # if the string property exists, there is no other status
             # lower because statusImgNames values are all lower
-            return str(statusTag.div.string).strip().lower(), fictional
+            return str(statusContent.string).strip().lower(), fictional
         # possibilities in statusImgNames
         status = statusImgNames[statusContent.a.img["alt"]]
         # some characters have 2 statuses, but it seems that the one of the two is always fictional (https://simpsons.fandom.com/wiki/Burns%27_Alien (fictional second)) (https://simpsons.fandom.com/wiki/Amy_Wong (fictional first)) (https://simpsons.fandom.com/wiki/Mao (only Fictional))
