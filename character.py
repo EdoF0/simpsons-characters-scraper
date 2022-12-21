@@ -224,11 +224,13 @@ def firstMentioned(characterInfobox:bs):
         firstMentionedTag = characterInfobox.find(attrs={"data-source": "mentioned"})
         if firstMentionedTag:
             # firstMentionedTag contains a link to an episode
-            # or, in rare cases, the title only inside a span (https://simpsons.fandom.com/wiki/The_Collector)
+            # or, in rare cases, the title only inside a span or not (https://simpsons.fandom.com/wiki/The_Collector (inside a span)) (https://simpsons.fandom.com/wiki/Burns%27_Vampire_Minions (no span))
             if firstMentionedTag.div.a:
                 return firstMentionedTag.div.a["title"].strip()
-            else:
+            elif firstMentionedTag.div.span:
                 return firstMentionedTag.div.span.string.strip()
+            else:
+                return firstMentionedTag.div.string.strip()
     return None
 
 def voice(characterInfobox:bs):
