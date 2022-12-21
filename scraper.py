@@ -5,11 +5,12 @@ import time
 from souphelper import soup
 from characters import charactersURLs, charactersNextURL
 from character import characterAttrs
+from characterexeptions import exceptions
 import export
 
 START_PAGE = "https://simpsons.fandom.com/wiki/Category:Characters"
 
-TEST = True # scrape some random characters
+TEST = False # scrape some random characters
 CHARACTER_TEST_URL = None # scrape only this if not None
 
 def scrapeCharacter(url:str):
@@ -17,6 +18,8 @@ def scrapeCharacter(url:str):
     if url.find("User:") != -1:
         return None
     if url.find("Category:") != -1:
+        return None
+    if url in exceptions:
         return None
     characterPage = soup(url)
     character = characterAttrs(characterPage, url=url)
