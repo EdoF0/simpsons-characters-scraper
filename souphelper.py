@@ -92,20 +92,20 @@ def handleLinebreaks(soup:bs, wiseReplace:str=None):
         br.replace_with(SoupStr(""))
         mergeStringElement(soup, i, joinStr=wiseReplace if wiseReplace else " ")
 
-def handleSpan(soup:bs):
+def handleSpan(soup:bs, extract = True):
     """Extract contents of <span> tags from the first depth level children"""
     for span in soup.find_all("span", recursive=False):
         i = soup.index(span)
-        if span.string and span.string.strip() != "":
-            # for unknown reason, replace_with has no effect
-            span.replace_with(SoupStr(span.string))
-            #replace(soup, i, SoupStr(span.string))
-        elif span.has_attr("title"):
-            span.replace_with(SoupStr(span["title"]))
-            #replace(soup, i, SoupStr(span["title"]))
+        if extract:
+            if span.string and span.string.strip() != "":
+                # for unknown reason, replace_with has no effect
+                span.replace_with(SoupStr(span.string))
+            elif span.has_attr("title"):
+                span.replace_with(SoupStr(span["title"]))
+            else:
+                span.replace_with(SoupStr(""))
         else:
             span.replace_with(SoupStr(""))
-            #replace(soup, i, SoupStr(""))
         mergeStringElement(soup, i)
 
 def handleLinks(soup:bs, replaceWithText=True):
