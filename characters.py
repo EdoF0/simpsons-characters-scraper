@@ -29,6 +29,6 @@ def charactersNextURL(charactersPage:bs):
     # .find() returns None if can't find anything
     nextButton = charactersPage.find(class_="category-page__pagination-next")
     if nextButton:
-        return nextButton["href"]
+        return str(nextButton["href"])
     else:
         return None
