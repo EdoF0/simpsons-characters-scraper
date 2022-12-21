@@ -15,7 +15,7 @@ def soup(url:str):
     response = requests.get(url)
     if not response.ok:
         raise Exception("GET request fail for page " + url)
-    return bs(response.content, "html.parser")
+    return bs(response.content, "html5lib") # pip install html5lib, required for reading <br> tags as <br/> tags
 
 def wiseCondition(leftStr:SoupStr|str, rightStr:SoupStr|str):
     """True if there should be nothing between the two strings when merging together"""
