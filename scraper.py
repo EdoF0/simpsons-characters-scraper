@@ -1,9 +1,11 @@
 import random
 from pprint import pprint
+import time
 
 from souphelper import soup
 from characters import charactersURLs, charactersNextURL
 from character import characterAttrs
+import export
 
 START_PAGE = "https://simpsons.fandom.com/wiki/Category:Characters"
 
@@ -30,9 +32,11 @@ def scrapeCharactersPage(url:str):
         print("Testing", characterURL)
         character = scrapeCharacter(characterURL)
         pprint(character, sort_dicts=False)
-        characters.append(character)
+        if character: # don't append if character is None
+            characters.append(character)
     else:
         for characterURL in charactersURLs(charactersPage):
+            print("  Scraping character", characterURL)
             character = scrapeCharacter(characterURL)
             if character: # don't append if character is None
                 characters.append(character)
@@ -45,6 +49,7 @@ def scrapeCharacters(startPage = START_PAGE):
     charactersPageURL = startPage
     while charactersPageURL:
         charactersPages.append(charactersPageURL)
+        print("Characters page " + str(len(charactersPages)) + " (" + charactersPageURL + ")")
         pageCharacters, charactersPageURL = scrapeCharactersPage(charactersPageURL)
         characters.extend(pageCharacters)
         if TEST and random.random() < 0.2:
@@ -65,5 +70,21 @@ if __name__ == "__main__":
         print("Testing single character " + CHARACTER_TEST_URL)
         pprint(scrapeCharacter(CHARACTER_TEST_URL), sort_dicts=False)
     else:
+        # scrape
+        startScrapingTime = time.time()
+        characters, _ = scrapeCharacters()
+        scrapingTime = time.time() - startScrapingTime
+        print("Scraping completed in " + str(int(scrapingTime/60)) + " min (" + str(scrapingTime) + " sec)")
+        # export
+        startExportTime = time.time()
+        print("now exporting to " + export.CSV_FILE_NAME)
         if TEST:
-            scrapeCharacters()
+            export.writeCsv(characters, filename=export.CSV_FILE_NAME+"-test")
+        else:
+            export.writeCsv(characters)
+        exportTime = time.time() - startExportTime
+        print("Export completed in " + str(int(exportTime/60)) + " min (" + str(exportTime) + " sec)")
+        # total
+        totalTime = time.time() - startScrapingTime
+        print("Number of character scraped: " + str(len(characters)))
+        print("Finished in " + str(int(totalTime/60)) + " min (" + str(totalTime) + " sec)")
