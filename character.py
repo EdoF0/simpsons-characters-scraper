@@ -152,6 +152,9 @@ def alias(characterInfobox:bs):
             handleSmall(aliasContent, extract=False)
             # there are also cite notes (https://simpsons.fandom.com/wiki/Demogorgon)
             handleSups(aliasContent)
+            # in rare cases there are links (https://simpsons.fandom.com/wiki/Charles_Montgomery_Burns)
+            handleLinks(aliasContent)
+            # multiple jobs
             handleLinebreaks(aliasContent, STR_SEPARATOR)
             if aliasContent.string:
                 return str(aliasContent.string).strip()
@@ -283,7 +286,7 @@ def characterAttrs(characterPage:bs, **moreAttributes):
         "birth country": birthCountry(infobox),
         # TODO owner (https://simpsons.fandom.com/wiki/Bluella)
         "job": job(infobox),
-        # TODO related to (https://simpsons.fandom.com/wiki/Ingrid_Schedeen)
+        # TODO related to (https://simpsons.fandom.com/wiki/Ingrid_Schedeen) (https://simpsons.fandom.com/wiki/Charles_Montgomery_Burns)
         "first appearance": firstAppearance(infobox),
         "first mentioned": firstMentioned(infobox),
         "voice": voice(infobox)
