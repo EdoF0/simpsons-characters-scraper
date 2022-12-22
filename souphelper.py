@@ -96,7 +96,7 @@ def handleLinebreaks(soup:bs, wiseReplace:str=None):
         br.replace_with(SoupStr(""))
         mergeStringElement(soup, i, joinStr=wiseReplace if wiseReplace else " ")
 
-def handleSpan(soup:bs, extract = True):
+def handleSpan(soup:bs, extract=True):
     """Extract contents of <span> tags from the first depth level children"""
     for span in soup.find_all("span", recursive=False):
         i = soup.index(span)
@@ -111,7 +111,7 @@ def handleSpan(soup:bs, extract = True):
             span.replace_with(SoupStr(""))
         mergeStringElement(soup, i)
 
-def handleSmall(soup:bs, extract = True):
+def handleSmall(soup:bs, extract=True):
     """Extract contents of <small> tags from the first depth level children"""
     for small in soup.find_all("small", recursive=False):
         i = soup.index(small)
@@ -124,7 +124,7 @@ def handleSmall(soup:bs, extract = True):
             small.replace_with(SoupStr(""))
         mergeStringElement(soup, i)
 
-def handleItalic(soup:bs, extract = True):
+def handleItalic(soup:bs, extract=True):
     """Extract contents of <i> tags from the first depth level children"""
     for italic in soup.find_all("i", recursive=False):
         i = soup.index(italic)
@@ -135,6 +135,19 @@ def handleItalic(soup:bs, extract = True):
                 italic.replace_with(SoupStr(""))
         else:
             italic.replace_with(SoupStr(""))
+        mergeStringElement(soup, i)
+
+def handleStrong(soup:bs, extract=True):
+    """Extract contents of <strong> tags from the first depth level children"""
+    for strong in soup.find_all("strong", recursive=False):
+        i = soup.index(strong)
+        if extract:
+            if strong.string and strong.string.strip() != "":
+                strong.replace_with(SoupStr(strong.string))
+            else:
+                strong.replace_with(SoupStr(""))
+        else:
+            strong.replace_with(SoupStr(""))
         mergeStringElement(soup, i)
 
 def handleLinks(soup:bs, replaceWithText=True):
