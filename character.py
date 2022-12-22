@@ -229,9 +229,9 @@ def firstAppearance(characterInfobox:bs):
             # firstAppearanceTag contains a link to an episode
             # or, in rare cases, the title only (https://simpsons.fandom.com/wiki/Amy_Wong)
             if firstAppearanceTag.div.a:
-                return firstAppearanceTag.div.a["title"].strip()
+                return str(firstAppearanceTag.div.a["title"]).strip()
             else:
-                return firstAppearanceTag.div.string
+                return str(firstAppearanceTag.div.string).strip()
     return None
 
 def firstMentioned(characterInfobox:bs):
@@ -242,11 +242,11 @@ def firstMentioned(characterInfobox:bs):
             # firstMentionedTag contains a link to an episode
             # or, in rare cases, the title only inside a span or not (https://simpsons.fandom.com/wiki/The_Collector (inside a span)) (https://simpsons.fandom.com/wiki/Burns%27_Vampire_Minions (no span))
             if firstMentionedTag.div.a:
-                return firstMentionedTag.div.a["title"].strip()
+                return str(firstMentionedTag.div.a["title"]).strip()
             elif firstMentionedTag.div.span:
-                return firstMentionedTag.div.span.string.strip()
+                return str(firstMentionedTag.div.span.string).strip()
             else:
-                return firstMentionedTag.div.string.strip()
+                return str(firstMentionedTag.div.string).strip()
     return None
 
 def voice(characterInfobox:bs):
