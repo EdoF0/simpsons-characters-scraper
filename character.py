@@ -53,6 +53,7 @@ def species(characterInfobox:bs):
 genderImgNames = {
     "Male.png": "male",
     "Female.png": "female",
+    "Nonbinary.png": "nonbinary", # (https://simpsons.fandom.com/wiki/Dubya_Spuckler)
     "Unknown.png": "unknown"
 }
 def gender(characterInfobox:bs):
