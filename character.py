@@ -259,6 +259,8 @@ def voice(characterInfobox:bs):
             handleP(voiceContent)
             # some rare characters have <span> elements inside voice description (https://simpsons.fandom.com/wiki/Mother_Bear)
             handleSpan(voiceContent)
+            # some rare characters have <strong> elements for particular voice actors (https://simpsons.fandom.com/wiki/Regis_Philbin)
+            handleStrong(voiceContent)
             # some characters have a voice actor with a dedicated page, meaning wrapped by an <a> tag
             handleLinks(voiceContent)
             # some rare characters have context descriptions for the voice actor in small tags (https://simpsons.fandom.com/wiki/Carol_Berrera)
