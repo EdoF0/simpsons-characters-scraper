@@ -67,6 +67,10 @@ def mergeStringElement(parent:bs, index:int, left=True, right=True, joinStr:str|
         merged = True
     if strElementText.strip() == "":
         strElement.extract()
+        # in a case where contents are like [<tag/>, " ", <tag/>] nothing is merged
+        # but with this final check the result will be [<tag/>, <tag/>]
+        # consider this a merge, because merge = False means that no changes were made
+        merged = True
     return merged
 
 def mergeStringElements(soup:bs, joinStr=" ", wise=True):
@@ -175,5 +179,4 @@ def handleP(soup:bs):
             if isinstance(soup.contents[i-1], bs4.element.NavigableString):
                 # left=False because the element i-2 is not adjacent to p, so it must not be modified
                 mergeStringElement(soup, i-1, left=False)
-        print(soup.prettify())
 
