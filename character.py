@@ -112,8 +112,9 @@ def _handleStatusTag(statusTag:bs):
         # handle two statuses
         statusContent.a.decompose()
         handleP(statusContent)
-        if statusContent.a:
+        if statusContent.a and statusContent.a.img:
             # if there is another status
+            # statusContent.a.img check is necessary for rare cases (https://simpsons.fandom.com/wiki/Tracey_Ullman_Homer)
             status2 = statusImgNames[statusContent.a.img["alt"]]
             if status2 == "fictional":
                 fictional = True
