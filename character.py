@@ -173,7 +173,9 @@ def hairColor(characterInfobox:bs):
         hairColorTag = characterInfobox.find(attrs={"data-source": "hair"})
         if hairColorTag:
             hairColorContent = hairColorTag.div
-            # some rare characters has 2 hair colors (or characteristics) separated by line breaks (https://simpsons.fandom.com/wiki/First_Lady_Admiral)
+            # some characters dos not have only direct text inside, but also paragraphs (https://simpsons.fandom.com/wiki/Homeland_Security_Agents)
+            handleP(hairColorContent)
+            # some characters has 2 hair colors (or characteristics) separated by line breaks (https://simpsons.fandom.com/wiki/First_Lady_Admiral)
             handleLinebreaks(hairColorContent, STR_SEPARATOR)
             # hair color is made lowercase for uniformity and human error fixing (case error only)
             return str(hairColorContent.string).strip().lower()
