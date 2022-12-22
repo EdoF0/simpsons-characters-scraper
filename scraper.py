@@ -10,7 +10,7 @@ import export
 
 START_PAGE = "https://simpsons.fandom.com/wiki/Category:Characters"
 
-TEST = False # scrape some random characters
+TEST = True # scrape some random characters
 CHARACTER_TEST_URL = None # scrape only this if not None
 
 def scrapeCharacter(url:str):
@@ -80,11 +80,9 @@ if __name__ == "__main__":
         print("Scraping completed in " + str(int(scrapingTime/60)) + " min (" + str(scrapingTime) + " sec)")
         # export
         startExportTime = time.time()
-        print("now exporting to " + export.CSV_FILE_NAME)
-        if TEST:
-            export.writeCsv(characters, filename=export.CSV_FILE_NAME+"-test")
-        else:
-            export.writeCsv(characters)
+        filename = export.CSV_FILE_NAME + ("-test" if TEST else "")
+        print("Now exporting to " + filename + "." + export.CSV_FILE_EXTENSION)
+        export.writeCsv(characters, filename=filename)
         exportTime = time.time() - startExportTime
         print("Export completed in " + str(int(exportTime/60)) + " min (" + str(exportTime) + " sec)")
         # total
