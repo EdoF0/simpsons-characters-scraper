@@ -71,8 +71,12 @@ def gender(characterInfobox:bs):
                 # if the string property exists, there is no other status
                 # lower because genderImgNames values are all lower
                 return str(genderContent.string).strip().lower()
-            # possibilities in genderImgNames
-            gender = genderImgNames[genderContent.a.img["alt"]]
+            # a character was found with only the secondary gender inside a paragraph (https://simpsons.fandom.com/wiki/Homeland_Security_Agents)
+            # so don't stop if there is not the first image
+            gender = None
+            if genderContent.a:
+                # possibilities in genderImgNames
+                gender = genderImgNames[genderContent.a.img["alt"]]
             # in rare cases, some characters have multiple genders (https://simpsons.fandom.com/wiki/3_Little_Pigs) (https://simpsons.fandom.com/wiki/Lady_Duff)
             genderContent.a.decompose()
             handleP(genderContent)
