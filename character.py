@@ -2,6 +2,7 @@ from warnings import warn
 from bs4 import BeautifulSoup as bs
 
 from souphelper import *
+from characterexceptions import exceptions
 
 STR_SEPARATOR = ","
 
@@ -301,3 +302,15 @@ def characterAttrs(characterPage:bs, **moreAttributes):
         "first mentioned": firstMentioned(infobox),
         "voice": voice(infobox)
     }
+
+def scrapeCharacter(url:str):
+    """Returns a character dictionary given the url to that character page, or returns None if the scraping failed"""
+    if url.find("User:") != -1:
+        return None
+    if url.find("Category:") != -1:
+        return None
+    if url in exceptions:
+        return None
+    characterPage = soup(url)
+    character = characterAttrs(characterPage, url=url)
+    return character
