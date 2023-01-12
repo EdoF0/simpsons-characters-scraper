@@ -1,4 +1,9 @@
+import random
+from pprint import pprint
 from bs4 import BeautifulSoup as bs
+
+from souphelper import soup
+from character import scrapeCharacter
 
 BASE_URL = "https://simpsons.fandom.com"
 
@@ -32,3 +37,23 @@ def charactersNextURL(charactersPage:bs):
         return str(nextButton["href"])
     else:
         return None
+
+def scrapeCharactersPage(url:str, test=False):
+    """Returns a list of characters given a characters page (page containing a list of characters)"""
+    characters = []
+    charactersPage = soup(url)
+    nextCharactersPageURL = charactersNextURL(charactersPage)
+    if test:
+        characterURL = random.choice(charactersURLs(charactersPage))
+        print("Testing", characterURL)
+        character = scrapeCharacter(characterURL)
+        pprint(character, sort_dicts=False)
+        if character: # don't append if character is None
+            characters.append(character)
+    else:
+        for characterURL in charactersURLs(charactersPage):
+            print("  Scraping character", characterURL)
+            character = scrapeCharacter(characterURL)
+            if character: # don't append if character is None
+                characters.append(character)
+    return characters, nextCharactersPageURL
