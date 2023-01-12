@@ -5,7 +5,7 @@ import time
 from souphelper import soup
 from characters import charactersURLs, charactersNextURL
 from character import characterAttrs
-from characterexeptions import exceptions
+from characterexceptions import exceptions
 import export
 
 START_PAGE = "https://simpsons.fandom.com/wiki/Category:Characters"
