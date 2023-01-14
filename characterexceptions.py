@@ -16,4 +16,6 @@ exceptions = {
     "https://simpsons.fandom.com/wiki/Patrolman_1", # human error: status deceased image inside alias section
     "https://simpsons.fandom.com/wiki/Vivienne_Saint_Germain", # human error: species and age inside other statuses
     "https://simpsons.fandom.com/wiki/Rhinos", # human error: first episode appearance is a description
+    "https://simpsons.fandom.com/wiki/Bear_Actor", # human error: gender not valid
+    "https://simpsons.fandom.com/wiki/Bomb_Disarming_Robot", # human error: gender not valid
 }
