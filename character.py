@@ -283,9 +283,9 @@ def characterAttrs(characterPage:bs, **moreAttributes):
     state, fictional = status(infobox)
     return {
         **moreAttributes,
-        "title": characterPage.find(id="firstHeading").string.strip(),
-        "name": name(infobox),
-        "image": image(infobox),
+        "known as": characterPage.find(id="firstHeading").string.strip(),
+        "full name": name(infobox),
+        "image url": image(infobox),
         "age": age(infobox),
         "species": species(infobox),
         "gender": gender(infobox),
