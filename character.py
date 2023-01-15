@@ -11,6 +11,8 @@ def name(characterInfobox:bs):
     if characterInfobox:
         titleTag = characterInfobox.find("h2")
         if titleTag:
+            # some characters has part of the name in italic when referencing something (https://simpsons.fandom.com/wiki/%27%27People_Who_Look_Like_Things%27%27_host)
+            handleItalic(titleTag)
             return str(titleTag.string).strip()
     return None
 
